@@ -36,15 +36,11 @@ api.add_resource(Home, '/')
 class RestaurantList(Resource):
 
     def get(self):
-        restaurants=[]
-        for restaurant in Restaurant.query.all():
-            restaurant_dict={
-                "id":restaurant.id,
-                "name":restaurant.name,
-                "address":restaurant.address
-            }
-            restaurants.append(restaurant_dict)
-            return make_response(jsonify(restaurants),200)
+        restaurants = [restaurant.restaurants_dict() for restaurant in Restaurant.query.all()]
+
+
+        
+        return make_response(jsonify(restaurants),200)
 
         
 api.add_resource(RestaurantList, '/restaurants')
@@ -73,21 +69,20 @@ class RestaurantsByID(Resource):
 class PizzaList(Resource):
 
     def get(self):
-        pizza=[]
-        for pizza in Pizza.query.all():
-            restaurant_dict={
-                "id":pizza.id,
-                "name":pizza.name,
-                "ingredients":pizza.address
-            }
-            pizza.append(restaurant_dict)
-            return make_response(jsonify(pizza),200)
+        pizza=[pizza.pizza_dict() for pizza in Pizza.query.all()]
+        
+        return make_response(jsonify(pizza),200)
 
         
 api.add_resource(PizzaList, '/pizza')   
 
 class RestaurantPizza(Resource):
-    
+    def get(self):
+        restaurantpizza=[restaurantpizza.restaurantpizza_dict() for restaurantpizza in RestaurantPizza.query.all()]
+        
+        
+        return make_response(jsonify(restaurantpizza),200)
+
     def post(self):
         data = request.get_json()#retrieve json data from the http request body
 
@@ -104,7 +99,7 @@ class RestaurantPizza(Resource):
 
 
         if not pizza or not restaurant:
-            return make_response(jsonify({"errors": ["validation errors pizza and restaurant dont exist"]}), 400)
+         return make_response(jsonify({"errors": ["validation errors pizza and restaurant dont exist"]}), 400)
 
         # Create a new RestaurantPizza
         restaurant_pizza = RestaurantPizza(
