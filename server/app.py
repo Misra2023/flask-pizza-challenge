@@ -79,7 +79,7 @@ api.add_resource(PizzaList, '/pizza')
 class RestaurantPizza(Resource):
     def get(self):
         restaurantpizza=[restaurantpizza.restaurantpizza_dict() for restaurantpizza in RestaurantPizza.query.all()]
-        
+
         
         return make_response(jsonify(restaurantpizza),200)
 
